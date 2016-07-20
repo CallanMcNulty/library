@@ -77,6 +77,12 @@ namespace Library
       dbo.CMD.ExecuteNonQuery();
       dbo.Close();
     }
+    public void RemoveAuthors()
+    {
+      DBObjects dbo = DBObjects.CreateCommand("DELETE FROM authors_books WHERE book_id=@ID;", new List<string> {"@Id"}, new List<object> {id});
+      dbo.CMD.ExecuteNonQuery();
+      dbo.Close();
+    }
     public List<Author> GetAuthors()
     {
       DBObjects dbo = DBObjects.CreateCommand("SELECT authors.* FROM books JOIN authors_books ON (books.id=authors_books.book_id) JOIN authors ON (authors_books.author_id=authors.id) WHERE books.id=@Id;", new List<string> {"@Id"}, new List<object> {id});

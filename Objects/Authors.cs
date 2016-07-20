@@ -45,5 +45,19 @@ namespace Library
       dbo.Close();
       return works;
     }
+    public static Author FindByName(string Name)
+    {
+      DBObjects dbo = DBObjects.CreateCommand("SELECT * FROM authors WHERE name=@Name;", new List<string> {"@Name"}, new List<object> {Name});
+      SqlDataReader rdr = dbo.RDR;
+      rdr = dbo.CMD.ExecuteReader();
+
+      Author result = null;
+      while(rdr.Read())
+      {
+         result = new Author(rdr.GetString(1), rdr.GetInt32(0) );
+      }
+      dbo.Close();
+      return result;
+    }
   }
 }

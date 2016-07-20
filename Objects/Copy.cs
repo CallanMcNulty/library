@@ -57,18 +57,24 @@ namespace Library
     }
     public void Checkin()
     {
-      Patron patron =Patron.Find(patron_id);
+      if(patron_id != 0)
+      {
+        Patron patron = Patron.Find(patron_id);
 
-      TimeSpan charge = DateTime.Today.Subtract(_dueDate);
-      int total = Math.Max(0, (int)charge.TotalDays) * 10;
+        TimeSpan charge = DateTime.Today.Subtract(_dueDate);
+        int total = Math.Max(0, (int)charge.TotalDays) * 10;
 
-      int newBalance = patron.balance + total;
+        int newBalance = patron.balance + total;
 
-      patron.Update(new List<string> {"balance"}, new List<object> {newBalance});
+        patron.Update(new List<string> {"balance"}, new List<object> {newBalance});
 
-      this.Update(new List<string> {"due_date", "patron_id"}, new List<object> {new DateTime(1900,1,1), 0});
+        this.Update(new List<string> {"due_date", "patron_id"}, new List<object> {new DateTime(1900,1,1), 0});
+      }
     }
-
+    public Book GetBook()
+    {
+      return Book.Find(_bookId);
+    }
     public static List<Copy> OverdueBooks()
     {
       List<Patron> patrons = Patron.GetAll();
