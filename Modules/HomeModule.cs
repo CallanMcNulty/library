@@ -34,13 +34,16 @@ namespace Library
         Book b = Book.Find(parameters.id);
         b.Update(new List<string> {"call_number", "collection", "title"}, new List<object> {(string)Request.Form["callNumber"], (string)Request.Form["collection"], (string)Request.Form["title"]});
         b.RemoveAuthors();
-        Author a = Author.FindByName(Request.Form["author"]);
-        if(a==null)
+        for(int i = 0; i<Request.Form["number-of-authors"]; i++)
         {
-          a = new Author(Request.Form["author"]);
-          a.Save();
+          Author a = Author.FindByName(Request.Form["author" + i]);
+          if(a==null)
+          {
+            a = new Author(Request.Form["author" + i]);
+            a.Save();
+          }
+          b.AddAuthor(a.id);
         }
-        b.AddAuthor(a.id);
         return View["book.cshtml", b];
       };
       Get["/circulation"] =_=>{
@@ -53,7 +56,11 @@ namespace Library
       };
       Post["/check-out/{id}"] =parameters=> {
         Patron p = Patron.Find(parameters.id);
-        p.Checkout((int)Request.Form["itemId"]);
+        Copy c = Copy.Find((int)Request.Form["itemId"]);
+        if(c!=null)
+        {
+          p.Checkout(c.id);
+        }
         return View["patron.cshtml", p];
       };
       Get["/check-in"] =_=> {
@@ -62,7 +69,10 @@ namespace Library
       Post["/check-in/new"] =_=> {
         int copyId = (int)Request.Form["id"];
         Copy c = Copy.Find(copyId);
-        c.Checkin();
+        if(c!=null)
+        {
+          c.Checkin();
+        }
         return View["check-in.cshtml"];
       };
       Get["/check-out"] =_=> {
@@ -88,13 +98,16 @@ namespace Library
         newBook.Save();
         Copy newCopy = new Copy(newBook.id, new DateTime(1900,1,1), 0);
         newCopy.Save();
-        Author a = Author.FindByName(Request.Form["author"]);
-        if(a==null)
+        for(int i = 0; i<Request.Form["number-of-authors"]; i++)
         {
-          a = new Author(Request.Form["author"]);
-          a.Save();
+          Author a = Author.FindByName(Request.Form["author" + i]);
+          if(a==null)
+          {
+            a = new Author(Request.Form["author" + i]);
+            a.Save();
+          }
+          newBook.AddAuthor(a.id);
         }
-        newBook.AddAuthor(a.id);
         return View["book.cshtml", newBook];
       };
       Post["copies/new"] =_=> {
