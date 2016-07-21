@@ -10,8 +10,13 @@
     <h3>Info</h3>
     <ul>
       <li>Notes: @Model.notes</li>
-      <li>Balance: @Model.balance</li>
+      <li>Balance: @Model.balance <form inline="inline" action="/patron/payfines/@Model.id" method="post">
+        <input type="hidden" name="_method" value="PATCH">
+        <input type="number" name="amount" value="">
+        <button type="submit">Pay Fines</button>
+      </form></li>
     </ul>
+    <a href="patron/edit/@Model.id"><button type="button">Edit Patron</button></a>
     <hr>
     <h3>Check-Out</h3>
     <form action="/check-out/@Model.id" method="post">
@@ -23,8 +28,16 @@
     <ul>
       @foreach(var copy in Model.GetItemsOut())
       {
-        <li><a href="/copies/@copy.id">@copy.GetBook().title</a> Due: @copy.due_date.ToString()</li>
+        <li><a href="/patronview/copies/@copy.id">@copy.GetBook().title</a> Due: @copy.due_date.ToString()</li>
       }
     </ul>
+    <hr>
+    <h3>History</h3>
+    <ol>
+      @foreach(var copy in Model.GetHistory())
+      {
+        <li><a href="/patronview/copies/@copy.id">@copy.GetBook().title</a></li>
+      }
+    </ol>
   </body>
 </html>

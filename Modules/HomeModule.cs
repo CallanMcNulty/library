@@ -17,13 +17,26 @@ namespace Library
         return View["references.cshtml",search];
       };
 
+      Get["/patrons"]=_=>{
+        List<Book> search = new List<Book> {};
+        return View["patrons.cshtml",search];
+      };
+
       Get["/books/{id}"] =parameters=> {
         Book b = Book.Find(parameters.id);
         return View["book.cshtml", b];
       };
+      Get["/patronview/books/{id}"] =parameters=> {
+        Book b = Book.Find(parameters.id);
+        return View["patronview-book.cshtml", b];
+      };
       Get["/copies/{id}"] =parameters=> {
         Copy c = Copy.Find(parameters.id);
         return View["copy.cshtml", c];
+      };
+      Get["/patronview/copies/{id}"] =parameters=> {
+        Copy c = Copy.Find(parameters.id);
+        return View["patronview-copy.cshtml", c];
       };
       Delete["/copies/delete/{id}"] =parameters=> {
         Copy c = Copy.Find(parameters.id);
@@ -90,6 +103,19 @@ namespace Library
         }
       };
 
+      Post["/patronview"] =_=> {
+        Patron p = Patron.Find((int)Request.Form["patronId"]);
+        if(p==null)
+        {
+          return View["check-out.cshtml", "No Patron Found"];
+        }
+        else
+        {
+          return View["patronview.cshtml", p];
+        }
+      };
+
+
       Get["/catalog"] =_=>{
         return View["catalog.cshtml"];
       };
@@ -124,6 +150,43 @@ namespace Library
         List<Book> booksearch = Book.Search(search,searchType);
 
         return View["references.cshtml",booksearch];
+      };
+      Post["/patronview/search"] =_=> {
+        string search = Request.Form["search"];
+        string searchType = Request.Form["searchdef"];
+
+        List<Book> booksearch = Book.Search(search,searchType);
+
+        return View["patrons.cshtml",booksearch];
+      };
+      Get["/patron/edit/{id}"]=parameters=>{
+        Patron findpatron = Patron.Find(parameters.id);
+
+        return View["updatepatron.cshtml", findpatron];
+      };
+
+      Patch["/patron/edit/{id}"]=parameters=>{
+        Patron findpatron = Patron.Find(parameters.id);
+
+        findpatron.Update(new List<string>{"name", "notes"}, new List<object>{(string)Request.Form["patronname"], (string)Request.Form["notes"]});
+
+        return View["patron.cshtml", findpatron];
+      };
+      Patch["/patron/payfines/{id}"]=parameters=> {
+        Patron p = Patron.Find(parameters.id);
+        p.PayFines(Request.Form["amount"]);
+        return View["patron.cshtml", p];
+      };
+
+      Get["/overdue"]=_=>
+      {
+        List<Copy> overDueBooks = Copy.OverdueBooks();
+        return View["overdue.cshtml",overDueBooks];
+      };
+
+      Get["/patron/{id}"] = parameters => {
+        Patron p = Patron.Find(parameters.id);
+        return View["patron.cshtml", p];
       };
 
     }

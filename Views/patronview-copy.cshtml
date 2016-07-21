@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h2>Copy Number: @Model.id</h2>
+    <hr>
+    <h3>Info</h3>
+    <ul>
+      <li>Due on: @Model.due_date.ToString()</li>
+      <li>Checked out to Patron @Model.patron_id</li>
+    </ul>
+    <hr>
+    <a href="/patronview/books/@Model.book_id">Back</a>
+  </body>
+</html>

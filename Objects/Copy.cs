@@ -75,6 +75,13 @@ namespace Library
     {
       return Book.Find(_bookId);
     }
+
+    public Patron GetPatron()
+    {
+      return Patron.Find(_patronId);
+    }
+
+    
     public static List<Copy> OverdueBooks()
     {
       List<Patron> patrons = Patron.GetAll();

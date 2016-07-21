@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h2>@Model.title</h2>
+    <hr>
+    <h3>Info</h3>
+    <ul>
+      <li>Author(s): <ul>
+        @foreach(var authors in Model.GetAuthors())
+        {
+          <li>@authors.name</li>
+        }
+      </ul></li>
+      <li>Collection: @Model.collection</li>
+      <li>Call Number: @Model.call_number</li>
+    </ul>
+    <hr>
+    <h3>Copies</h3>
+    <ul>
+      @foreach(var copy in Model.GetCopies())
+      {
+        <li><a href="/patronview/copies/@copy.id">Copy Number: @copy.id</a></li>
+      }
+    </ul>
+  </body>
+</html>

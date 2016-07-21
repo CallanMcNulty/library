@@ -80,6 +80,11 @@ namespace Library
       dbo.CMD.ExecuteNonQuery();
       dbo.Close();
     }
+    public void PayFines(int amountPaid)
+    {
+      int newBalance = Math.Max(0,_balance-amountPaid);
+      this.Update(new List<string>{"balance"}, new List<object>{newBalance});
+    }
     public List<Copy> GetHistory()
     {
       DBObjects dbo = DBObjects.CreateCommand("SELECT copies.* FROM patrons JOIN checkouts ON (patrons.id=checkouts.patron_id) JOIN copies ON (checkouts.copy_id=copies.id) WHERE patrons.id=@Id;", new List<string> {"@Id"}, new List<object> {id});

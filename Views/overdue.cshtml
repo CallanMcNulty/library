@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h2>Over-Due Books</h2>
+    <hr>
+    @if(Model.Count !=0)
+    {
+      <ul>
+        @foreach(var book in Model)
+        {
+          <li><a href="/patron/@book.GetPatron().id">@book.GetBook().title</a></li>
+        }
+      </ul>
+    }
+    else
+    {
+      <h3>No overdue books.</h3>
+    }
+  </body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h2>@Model.name</h2>
+    <hr>
+    <h3>Info</h3>
+    <ul>
+      <li>Notes: @Model.notes</li>
+      <li>Balance: @Model.balance</li>
+    </ul>
+    <hr>
+    <h3>Items Out</h3>
+    <ul>
+      @foreach(var copy in Model.GetItemsOut())
+      {
+        <li><a href="/copies/@copy.id">@copy.GetBook().title</a> Due: @copy.due_date.ToString()</li>
+      }
+    </ul>
+    <hr>
+    <h3>History</h3>
+    <ol>
+      @foreach(var copy in Model.GetHistory())
+      {
+        <li><a href="/copies/@copy.id">@copy.GetBook().title</a></li>
+      }
+    </ol>
+  </body>
+</html>
